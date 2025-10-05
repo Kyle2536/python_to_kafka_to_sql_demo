@@ -1,3 +1,12 @@
+"""
+send_realtime_data10.py
+-----------------------
+Sends batches of real-time traffic data to a Kafka topic (10 at a time).
+
+Author: Capstone Team
+Date: 2025-10-04
+"""
+
 from kafka import KafkaProducer
 import json, random, time
 from datetime import datetime

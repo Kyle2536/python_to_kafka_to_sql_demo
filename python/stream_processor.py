@@ -1,3 +1,12 @@
+"""
+stream_processor.py
+-------------------
+Processes traffic data streams from Kafka and performs analytics or transformation.
+
+Author: Capstone Team
+Date: 2025-10-04
+"""
+
 # stream_processor.py
 from kafka import KafkaConsumer, KafkaProducer
 import json
