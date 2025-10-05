@@ -13,11 +13,11 @@ producer = KafkaProducer(
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
-print("Streaming raw radar data to Kafka... Press Ctrl+C to stop.")
+print("Streaming raw data to Kafka, Press Ctrl+C to stop.")
 
 try:
     while True:
-        start_time = time.time()  # ⏱ start generation timer
+        start_time = time.time()  # start generation timer
 
         data = {
             "Timestamp": datetime.now().strftime("%m/%d/%Y %I:%M:%S %p"),
@@ -32,7 +32,7 @@ try:
         producer.send(TOPIC_NAME, value=data)
         producer.flush()
 
-        elapsed = time.time() - start_time  # ⏱ generation time
+        elapsed = time.time() - start_time  # generation time
         print(f"Sent: {data} | Generation time: {elapsed:.4f}s")
 
         time.sleep(1)

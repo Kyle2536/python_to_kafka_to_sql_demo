@@ -15,10 +15,10 @@ producer = KafkaProducer(
 
 print("Starting 10-sample radar data test...")
 
-total_start = time.time()  # ⏱ Start total timer
+total_start = time.time()  # Start total timer
 
 for i in range(10):
-    start_gen = time.time()  # ⏱ Start generation timer
+    start_gen = time.time()  # Start generation timer
 
     data = {
         "Timestamp": datetime.now().strftime("%m/%d/%Y %I:%M:%S %p"),
@@ -39,7 +39,7 @@ for i in range(10):
     time.sleep(1)  # mimic real sensor rate
 
 total_elapsed = time.time() - total_start
-print(f"\n✅ Finished sending 10 samples.")
+print(f"\nFinished sending 10 samples.")
 print(f"Total time to generate and send all data: {total_elapsed:.4f}s")
 
 producer.close()

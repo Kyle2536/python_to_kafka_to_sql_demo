@@ -12,7 +12,7 @@ MYSQL_HOST = "richardsonsql.mysql.database.azure.com"
 MYSQL_PORT = 3306
 MYSQL_USER = "utdsql"
 MYSQL_PASSWORD = "Capstone2025!"
-MYSQL_DATABASE = "kafka"  # ✅ your correct schema name
+MYSQL_DATABASE = "kafka"  # your correct schema name
 
 # Connect to MySQL
 db = mysql.connector.connect(
@@ -26,7 +26,7 @@ cursor = db.cursor()
 
 # Confirm active DB
 cursor.execute("SELECT DATABASE();")
-print("✅ Connected to database:", cursor.fetchone()[0])
+print("Connected to database:", cursor.fetchone()[0])
 
 # Create table if not exists
 cursor.execute("""
@@ -51,11 +51,11 @@ consumer = KafkaConsumer(
     value_deserializer=lambda x: json.loads(x.decode('utf-8')),
     auto_offset_reset='earliest',
     group_id='mysql_raw_consumer',
-    consumer_timeout_ms=5000  # 3 seconds of inactivity triggers stop
+    consumer_timeout_ms=5000  # 5 seconds of inactivity triggers stop
 )
 
 
-print("🚀 Consuming raw radar data from Kafka and inserting into MySQL (table: raw_data_kafka)...")
+print("Consuming raw data from Kafka and inserting into MySQL (table: raw_data_kafka)")
 
 msg_count = 0
 pipeline_start = time.time()  # total pipeline timer
@@ -89,9 +89,9 @@ for message in consumer:
     print(f"Inserted raw data: {data}")
     print(f"⏱ Total pipeline time: {total_pipeline_time:.4f} seconds\n")
 
-print(f"✅ No new messages for 5 seconds — consumer stopped.")
-print(f"📦 Total messages processed: {msg_count}")
-print(f"⏰ Total runtime: {time.time() - pipeline_start:.2f} seconds")
+print(f"No new messages for 5 seconds — consumer stopped.")
+print(f"Total messages processed: {msg_count}")
+print(f"Total runtime: {time.time() - pipeline_start:.2f} seconds")
 
 # Clean up
 cursor.close()
