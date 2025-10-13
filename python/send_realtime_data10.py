@@ -22,11 +22,11 @@ producer = KafkaProducer(
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
-print("Starting 10-sample radar data test...")
+print("Starting 10000-sample radar data test...")
 
 total_start = time.time()  # Start total timer
 
-for i in range(10):
+for i in range(10000):
     start_gen = time.time()  # Start generation timer
 
     data = {
@@ -43,7 +43,7 @@ for i in range(10):
     producer.flush()
 
     gen_time = time.time() - start_gen
-    print(f"[{i+1}/10] Sent: {data} | Generation time: {gen_time:.4f}s")
+    print(f"[{i+1}/10000] Sent: {data} | Generation time: {gen_time:.4f}s")
 
     time.sleep(1)  # mimic real sensor rate
 

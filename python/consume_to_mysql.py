@@ -32,7 +32,8 @@ print("Connected to database:", cursor.fetchone()[0])
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS raw_data_kafka (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    timestamp VARCHAR(50),
+    created_at DATE,
+    timestamp VARCHAR(15),
     peakspeed INT,
     pmgid BIGINT,
     direction INT,
@@ -69,12 +70,13 @@ for message in consumer:
 
     cursor.execute("""
         INSERT INTO raw_data_kafka (
-            timestamp, peakspeed, pmgid, direction, location, vehiclecount,
+            created_at, timestamp, peakspeed, pmgid, direction, location, vehiclecount,
             generation_time, total_pipeline_time
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """, (
-        data["Timestamp"],
+        data["created_at"],
+        data["timestamp"],
         data["PeakSpeed"],
         data["Pmgid"],
         data["Direction"],
