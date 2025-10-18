@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Traffic Dashboard</title>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+</head>
+<body style="font-family: Arial, sans-serif;">
+  <h2 style="text-align:center;">Real-Time Traffic Dashboard</h2>
+
+  <div style="text-align:center; margin-top:20px;">
+    <button id="pauseBtn">⏸️</button>
+    <button id="resumeBtn">▶️</button>
+  </div>
+
+  <div id="speedChart" style="height: 400px; width: 80%; margin: auto;"></div>
+  <div id="directionChart" style="height: 400px; width: 80%; margin: auto; margin-top: 50px;"></div>
+
+  <script>
+  let refreshInterval;
+  let isPaused = false;
+
+  async function fetchData() {
+    const response = await fetch("http://127.0.0.1:5000/data");
+    const data = await response.json();
+    return data.map(item => ({
+      name: item.timestamp,
+      y: item.peakspeed,
+      direction: item.direction
+    }));
+  }
+
+  async function drawCharts() {
+    const points = await fetchData();
+
+    // Line chart (Peak Speed)
+    Highcharts.chart("speedChart", {
+      chart: { type: "line" },
+      title: { text: "Vehicle Peak Speeds (Live)" },
+      xAxis: { categories: points.map(p => p.name) },
+      yAxis: { title: { text: "Speed (mph)" } },
+      series: [{ name: "Peak Speed", data: points.map(p => p.y) }]
+    });
+
+    // Pie chart (Direction)
+    const northCount = points.filter(p => p.direction === 1).length;
+    const southCount = points.filter(p => p.direction === 0).length;
+
+    Highcharts.chart("directionChart", {
+      chart: { type: "pie" },
+      title: { text: "Vehicle Direction Distribution" },
+      series: [
+        {
+          name: "Vehicles",
+          colorByPoint: true,
+          data: [
+            { name: "Northbound", y: northCount },
+            { name: "Southbound", y: southCount }
+          ]
+        }
+      ]
+    });
+  }
+
+  function startAutoRefresh() {
+    if (!refreshInterval) {
+      refreshInterval = setInterval(drawCharts, 5000);
+      console.log("Auto-refresh started.");
+    }
+  }
+
+  function stopAutoRefresh() {
+    clearInterval(refreshInterval);
+    refreshInterval = null;
+    console.log("Auto-refresh paused.");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    drawCharts();
+    startAutoRefresh();
+
+    document.getElementById("pauseBtn").addEventListener("click", () => {
+      if (!isPaused) {
+        stopAutoRefresh();
+        isPaused = true;
+      }
+    });
+
+    document.getElementById("resumeBtn").addEventListener("click", () => {
+      if (isPaused) {
+        startAutoRefresh();
+        isPaused = false;
+      }
+    });
+  });
+</script>
+</body>
+</html>
